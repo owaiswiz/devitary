@@ -6,7 +6,7 @@
       <div class="">
         <form id="uploadFileForm" enctype="multipart/form-data" method="post">
           <input class="form-file-upload-input overflow-hidden opacity-0 absolute -z-10" type="file" name="file" id="file" value=""/ >
-          <label for="file" class="px-8 py-4 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
+          <label for="file" class="border-4 border-transparent form-file-upload-label px-8 py-4 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
             <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16" stroke="#4A5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -14,7 +14,10 @@
           </label>
         </form>
       </div>
-        <button class="upload-file-button block w-full mt-8 py-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 ">Upload</button>
+      <button class="upload-file-button block w-full mt-8 py-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 focus:outline-none focus:shadow-outline">
+        <span class="loading loader block hidden"></span>
+        <span class="loaded">Upload</span>
+      </button>
     </div>
   </div>
 </div>
@@ -43,7 +46,30 @@
     });
   });
 
+  document.querySelector(".form-file-upload-label").addEventListener("click", function() {
+    this.classList.remove("border-red-400")
+    this.classList.add("border-transparent")
+  });
+
+
   document.querySelector(".upload-file-button").addEventListener("click", function() {
+    var button = this
+    var loadingSpan = button.querySelector('span.loading')
+    var loadedSpan = button.querySelector('span.loaded')
+
+    var disabledStateClasses = ["opacity-50", "cursor-not-allowed", "disabled"]
+    if(button.classList.contains("disabled"))
+      return
+
+    if(!document.querySelector(".form-file-upload-input").value.trim()) {
+      document.querySelector(".form-file-upload-label").classList.add("border-red-400")
+      return
+    }
+
+    disabledStateClasses.map(c => button.classList.add(c))
+    loadingSpan.classList.remove("hidden")
+    loadedSpan.classList.add("hidden")
+
     var formData = new FormData(document.querySelector("form#uploadFileForm"));
     Rails.ajax({
       url: "<%= home_upload_path %>",
@@ -51,6 +77,14 @@
       data: formData,
       success: function(data) {
         console.log(data)
+      }, 
+      error: function(data) {
+        alert("Error: " + data.error)
+      },
+      complete: function(data) {
+        disabledStateClasses.map(c => button.classList.remove(c))
+        loadingSpan.classList.add("hidden")
+        loadedSpan.classList.remove("hidden")
       }
     })
   })

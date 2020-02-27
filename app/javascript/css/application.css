@@ -1,3 +1,20 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+.loader{
+  margin: auto;
+  border: 2px solid;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius:50%;
+  border-color:white white white transparent;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  100%{ 
+    transform:rotate(360deg); 
+  }
+}
+
