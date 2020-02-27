@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Devitary</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/inter-ui@3.12.1/inter.css" type="text/css" media="all" />
+    <%= csp_meta_tag %>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_pack_tag 'application', media: 'all' %>
+    <%= javascript_pack_tag 'application' %>
+  </head>
+
+  <body class="min-h-screen font-display bg-gray-100">
+    <%= yield %>
+  </body>
+</html>
