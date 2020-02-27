@@ -4,15 +4,17 @@
     <p class="mt-6 text-center text-xs md:text-sm xl:text-lg text-indigo-800 font-semibold">Upload images &amp; other static assets for free. To configure your own, <a href="https://github.com/owaiswiz/devitary" class="text-indigo-500 border-b-2 border-indigo-200 hover:border-indigo-500">click here</a>.</p>
     <div class="mt-8 sm:mt-24">
       <div class="">
-        <input class="form-file-upload-input overflow-hidden opacity-0 absolute -z-10" type="file" name="file" id="file" value=""/ >
-        <label for="file" class="px-8 py-4 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
-          <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16" stroke="#4A5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="ml-2 font-semibold text-sm tracking-wide">Choose File</span>
-        </label>
+        <form id="uploadFileForm" enctype="multipart/form-data" method="post">
+          <input class="form-file-upload-input overflow-hidden opacity-0 absolute -z-10" type="file" name="file" id="file" value=""/ >
+          <label for="file" class="px-8 py-4 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
+            <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16" stroke="#4A5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="ml-2 font-semibold text-sm tracking-wide">Choose File</span>
+          </label>
+        </form>
       </div>
-        <button class="block w-full mt-8 py-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 ">Upload</button>
+        <button class="upload-file-button block w-full mt-8 py-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 ">Upload</button>
     </div>
   </div>
 </div>
@@ -40,4 +42,16 @@
         label.innerHTML = labelVal;
     });
   });
+
+  document.querySelector(".upload-file-button").addEventListener("click", function() {
+    var formData = new FormData(document.querySelector("form#uploadFileForm"));
+    Rails.ajax({
+      url: "<%= home_upload_path %>",
+      type: "POST", 
+      data: formData,
+      success: function(data) {
+        console.log(data)
+      }
+    })
+  })
 </script>
