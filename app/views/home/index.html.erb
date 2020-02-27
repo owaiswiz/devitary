@@ -6,7 +6,7 @@
       <div class="">
         <form id="uploadFileForm" enctype="multipart/form-data" method="post">
           <input class="form-file-upload-input overflow-hidden opacity-0 absolute -z-10" type="file" name="file" id="file" value=""/ >
-          <label for="file" class="border-4 border-transparent form-file-upload-label px-8 py-4 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
+          <label for="file" class="border-4 border-transparent form-file-upload-label px-8 py-3 w-64 flex flex-row items-center justify-center cursor-pointer inline-block bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-gray-800 transition-all duration-200">
             <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16" stroke="#4A5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -14,10 +14,22 @@
           </label>
         </form>
       </div>
-      <button class="upload-file-button block w-full mt-8 py-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 focus:outline-none focus:shadow-outline">
+      <button class="border-4 border-transparent upload-file-button block w-full mt-8 py-3 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 font-semibold tracking-widest shadow-lg rounded-lg transition-all duration-200 focus:outline-none focus:shadow-outline">
         <span class="loading loader block hidden"></span>
-        <span class="loaded">Upload</span>
+        <span class="text-sm loaded">Upload</span>
       </button>
+      <div class="uploaded-click-to-copy hidden mt-16">
+        <div class="text-sm tracking-wide font-semibold text-gray-600 text-center">Uploaded! Click To Copy URL</div>
+        <div class='mt-4 flex shadow-none bg-gray-300 rounded-lg cursor-pointer w-full'>
+          <input type="text" class="uploaded-url-input w-48 focus:outline-none focus:shadow-outline bg-gray-300 text-gray-600 p-4 text-xs font-semibold rounded-l-lg" value="" readonly />
+          <button class="copy-url-to-clipboard-button px-4 bg-indigo-500 text-gray-100 hover:bg-indigo-600 hover:text-gray-100 text-sm font-semibold tracking-widest transition-all duration-200 focus:outline-none focus:shadow-outline rounded-r-lg flex-1">
+            <svg class="mx-auto h-5 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10M20 14H10M10 14L13 11M10 14L13 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
@@ -49,6 +61,14 @@
   document.querySelector(".form-file-upload-label").addEventListener("click", function() {
     this.classList.remove("border-red-400")
     this.classList.add("border-transparent")
+    document.querySelector(".uploaded-click-to-copy").classList.add('hidden')
+  });
+
+  document.querySelector(".copy-url-to-clipboard-button").addEventListener("click", function() {
+    var input = document.querySelector(".uploaded-url-input")
+    input.select()
+    input.setSelectionRange(0,99999)
+    document.execCommand("copy")
   });
 
 
@@ -56,6 +76,8 @@
     var button = this
     var loadingSpan = button.querySelector('span.loading')
     var loadedSpan = button.querySelector('span.loaded')
+    var uploadedClickToCopyDiv = document.querySelector(".uploaded-click-to-copy")
+    var uploadedUrlInput = document.querySelector(".uploaded-url-input")
 
     var disabledStateClasses = ["opacity-50", "cursor-not-allowed", "disabled"]
     if(button.classList.contains("disabled"))
@@ -76,7 +98,8 @@
       type: "POST", 
       data: formData,
       success: function(data) {
-        console.log(data)
+        uploadedClickToCopyDiv.classList.remove('hidden')
+        uploadedUrlInput.value = data.url
       }, 
       error: function(data) {
         alert("Error: " + data.error)
