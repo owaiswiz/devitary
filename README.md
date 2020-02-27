@@ -1,24 +1,33 @@
-# README
+# devitary
+A simple rails application with an API and a simple web interface to upload & host static files (Images, Fonts) or any other files with Google Firebase for free (refer [limits](https://firebase.google.com/docs/firestore/quotas)).
+## Deploying your own
+1. Create a firebase project - [Firebase Console](https://console.firebase.google.com/).
+2. Create a default storage bucket
+	* Click Develop > Storage > Get Started > Next > Choose Location > Done
+3. Download the credentials json file with private key from firebase console.
+	* Click Settings Icon > Project Settings > Service Accounts > Generate new private key > Generate key
+4. Clone this repository
+	
+	``` 
+	git clone https://github.com/owaiswiz/devitary.git
+	```
+5. Update ```config/application.rb``` with the path of the downloaded file
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+	```ruby
+	config.firebase_credentials_file_path = "/yourpath/to/credentials.json"
+	```
+6. Run the server using ```rails s``` or deploy how you would deploy any other rails app
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# Using the API
+Create a post request to ``` /upload``` with the file in the multipart form data body
+### Example
+```ruby
+response = HTTParty.post(
+	'http://YOURHOSTEDIPORURL/upload', 
+	body: {
+		file: File.open("/home/owaiswiz/Downloads/SashaSloan.png")
+	}
+)
+json = JSON.parse(response.body)
+puts json["url"]  # => "https://storage.googleapis.com/devitary-image-host.appspot.com/15828387941719051810-c.png" 
+```
