@@ -31,5 +31,8 @@ module Devitary
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    #Change these to your firebase json credentials file path
+    config.firebase_credentials_file_path = "/home/owaiswiz/Downloads/credentials.json"
   end
 end
