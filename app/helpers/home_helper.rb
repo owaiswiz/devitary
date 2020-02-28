@@ -1,17 +1,20 @@
 module HomeHelper
   def upload_file_to_firebase file_path
     begin
-      credentials_path = Rails.application.config.firebase_credentials_file_path
-      credentials = JSON.parse File.read(credentials_path)
+      credentials = JSON.parse(Rails.application.config.firebase_credentials)
+
+      raise unless credentials
+
       project_id = credentials["project_id"]
+
+      storage = Google::Cloud::Storage.new(
+        credentials: credentials,
+        project_id: project_id
+      )
     rescue
       raise FirebaseConfigInvalidError
     end
 
-    storage = Google::Cloud::Storage.new(
-      credentials: credentials_path,
-      project_id: project_id
-    )
 
     begin
       bucket = storage.bucket("#{project_id}.appspot.com")

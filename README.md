@@ -11,11 +11,7 @@ A simple rails application with an API and a simple web interface to upload & ho
 	``` 
 	git clone https://github.com/owaiswiz/devitary.git
 	```
-5. Update ```config/application.rb``` with the path of the downloaded file
-
-	```ruby
-	config.firebase_credentials_file_path = "/yourpath/to/credentials.json"
-	```
+5. Set the environment variable ```STORAGE_CREDENTIALS``` with the content of the downloaded json file
 6. Run the server using ```rails s``` or deploy how you would deploy any other rails app
 
 # Using the API

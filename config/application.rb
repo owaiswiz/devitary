@@ -32,7 +32,7 @@ module Devitary
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    #Change these to your firebase json credentials file path
-    config.firebase_credentials_file_path = Rails.root.join("config", "firebasecred.json").to_s
+    #Set the below environment variable with the content of your credentials json file
+    config.firebase_credentials = ENV["STORAGE_CREDENTIALS"]
   end
 end
